@@ -132,6 +132,7 @@ static void do_accept(int epollfd, int server_fd)
 {
 	int client_fd;
 	struct sockaddr_in addr;
+	char ip[32];
 	socklen_t addr_len;
 	client_fd = accept(server_fd, (struct sockaddr *) &addr,
 			&addr_len);
@@ -141,7 +142,8 @@ static void do_accept(int epollfd, int server_fd)
 		return;
 	}
 
-	printf("accept a new client: %s:%d\n", inet_ntop(addr.sin_addr), addr.sin_port);
+	inet_ntop(AF_INET, &addr.sin_addr, ip, sizeof(ip));
+	printf("accept a new client: %s:%d\n", ip, addr.sin_port);
 	add_event(epollfd, client_fd, EPOLLIN);
 }
 
